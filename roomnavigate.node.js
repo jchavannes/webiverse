@@ -44,7 +44,8 @@ io.sockets.on('connection', function (socket) {
 				sockId: data.sockId,
 				active: true,
 				x: data.x,
-				z: data.z
+				z: data.z,
+				y: data.y
 			}
 		}
 
@@ -66,7 +67,8 @@ io.sockets.on('connection', function (socket) {
 			sockets[data.sockId].socket.emit('getMove', {
 				id: user.id,
 				x: user.x,
-				z: user.z
+				z: user.z,
+				y: user.y
 			});
 
 			// Send new user to all clients
@@ -74,7 +76,8 @@ io.sockets.on('connection', function (socket) {
 				sockets[user.sockId].socket.emit('getMove', {
 					id: users[userId].id,
 					x: users[userId].x,
-					z: users[userId].z
+					z: users[userId].z,
+					y: users[userId].y
 				});
 			}
 		});
@@ -86,6 +89,7 @@ io.sockets.on('connection', function (socket) {
 			refreshUser(data.id);
 			users[data.id].x = data.x;
 			users[data.id].z = data.z;
+			users[data.id].y = data.y;
 
 			// Send move to all clients (except sending client)
 			users.forEach(function(user) {
@@ -93,7 +97,8 @@ io.sockets.on('connection', function (socket) {
 					sockets[user.sockId].socket.emit('getMove', {
 						id: data.id,
 						x: data.x,
-						z: data.z
+						z: data.z,
+						y: data.y
 					})
 				}
 			});

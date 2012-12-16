@@ -73,9 +73,10 @@ var Game = new(function() {
 			setInterval(update, 1000/30);
 		}
 		function addSphere() {
-			var geometry = new THREE.SphereGeometry();
+			var geometry = new THREE.SphereGeometry(5);
 			var material = new THREE.MeshLambertMaterial({color:0xffffff});
 			var sphere = new THREE.Mesh(geometry, material);
+			sphere.position.y += 5;
 			scene.add(sphere);
 			return sphere;
 		}
@@ -131,8 +132,13 @@ var Game = new(function() {
 				if (typeof playerCords[i] != 'undefined' && playerCords[i].active) {
 					player[i].position.x = ((playerCords[i].cords.x - playerCords[i].startCords.x) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.x;
 					player[i].position.z = ((playerCords[i].cords.z - playerCords[i].startCords.z) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.z;
-					playerCords[i].eyeball.position.x = player[i].position.x;
-					playerCords[i].eyeball.position.z = player[i].position.z;
+					player[i].rotation.y = playerCords[i].cords.y;
+
+					var direction = (playerCords[i].cords.y % (2*Math.PI)) / (2*Math.PI) * 360 + 180;
+					playerCords[i].lefteye.position.x = player[i].position.x+Animate.vectorX(direction+20)*20;
+					playerCords[i].lefteye.position.z = player[i].position.z+Animate.vectorZ(direction+20)*20;
+					playerCords[i].righteye.position.x = player[i].position.x+Animate.vectorX(direction-20)*20;
+					playerCords[i].righteye.position.z = player[i].position.z+Animate.vectorZ(direction-20)*20;
 					playerCords[i].stepsLeft--;
 					if (playerCords[i].stepsLeft == 0) {
 						playerCords[i].active = false;
@@ -162,12 +168,12 @@ var Game = new(function() {
 				active: false,
 				cords: cords,
 				startCords: Animate.playerCords(id),
-				eyeball: addSphere()
+				lefteye: addSphere(),
+				righteye: addSphere(),
 			};
 			player[id].position.x = cords.x;
 			player[id].position.z = cords.z;
-			playerCords[id].eyeball.position.x = cords.x;
-			playerCords[id].eyeball.position.z = cords.z;
+			player[id].rotation.y = cords.y;
 			scene.add(player[id]);
 			return id;
 		}
@@ -193,6 +199,7 @@ var Game = new(function() {
 		this.setCamera = function(cords) {
 			camera.position.x = cords.x;
 			camera.position.z = cords.z;
+			camera.rotation.y = cords.y;
 		}
 
 	})
