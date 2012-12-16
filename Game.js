@@ -132,7 +132,7 @@ var Game = new(function() {
 				if (typeof playerCords[i] != 'undefined' && playerCords[i].active) {
 					player[i].position.x = ((playerCords[i].cords.x - playerCords[i].startCords.x) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.x;
 					player[i].position.z = ((playerCords[i].cords.z - playerCords[i].startCords.z) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.z;
-					player[i].rotation.y = playerCords[i].cords.y;
+					//player[i].rotation.y = playerCords[i].cords.y;
 
 					var direction = (playerCords[i].cords.y % (2*Math.PI)) / (2*Math.PI) * 360 + 180;
 					playerCords[i].lefteye.position.x = player[i].position.x+Animate.vectorX(direction+20)*20;
@@ -173,9 +173,11 @@ var Game = new(function() {
 			};
 			player[id].position.x = cords.x;
 			player[id].position.z = cords.z;
-			player[id].rotation.y = cords.y;
 			scene.add(player[id]);
 			return id;
+		}
+		this.removePlayer = function(id) {
+			//scene.remove(player[id]);
 		}
 		this.movePlayer = function(id, cords) {
 			$.extend(playerCords[id], {
@@ -210,7 +212,7 @@ var Game = new(function() {
 			socket = io.connect('ws://dev.socketgaming.com:8020');
 			socket.on('getSocket', function(data) {
 				cords = Animate.playerCords();
-				socket.emit('setSession', {sessionId:SESSIONID, sockId:data.sockId, x:cords.x, z:cords.z});
+				socket.emit('setSession', {sessionId:SESSIONID, sockId:data.sockId, x:cords.x, z:cords.z, y:cords.y});
 			});
 			socket.on('getMyUserInfo', function(data) {
 				user.id = data.id;
@@ -228,7 +230,7 @@ var Game = new(function() {
 				Animate.movePlayer(animateId, data);
 			});
 			socket.on('userExit', function(data) {
-				// Remove player
+				Animate.removePlayer(getPlayer(data.id));
 			});
 			setInterval(checkPosition, 200);
 		}

@@ -63,6 +63,8 @@ io.sockets.on('connection', function (socket) {
 		var now = new Date().getTime();
 		users.forEach(function(user) {
 
+			if (!isActive(user.id)) return;
+
 			// Send all users to client
 			sockets[data.sockId].socket.emit('getMove', {
 				id: user.id,
@@ -93,7 +95,7 @@ io.sockets.on('connection', function (socket) {
 
 			// Send move to all clients (except sending client)
 			users.forEach(function(user) {
-				if(user.id != data.id) {
+				if(user.id != data.id && isActive(user.id)) {
 					sockets[user.sockId].socket.emit('getMove', {
 						id: data.id,
 						x: data.x,
@@ -113,7 +115,7 @@ io.sockets.on('connection', function (socket) {
 
 			// Send disconnect to all clients
 			users.forEach(function(user) {
-				if(user.active) {
+				if(isActive(user.id)) {
 					sockets[user.sockId].socket.emit('userExit', {id: disconnect.userId});
 				}
 			});
@@ -140,11 +142,15 @@ function sendMessage(id, msg, log) {
 	});
 }
 
+function isActive(userId) {
+	return users[userId].active && users[userId].expire > new Date().getTime();
+}
+
 // Update user expiration
 function refreshUser(userId) {
 	var now = new Date().getTime();
 	if(typeof users[userId] != 'undefined') {
-		users[userId].expire = now + 1000000;
+		users[userId].expire = now + 60000;
 		users[userId].active = true;
 	}
 }
