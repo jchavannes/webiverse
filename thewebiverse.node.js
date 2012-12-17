@@ -150,7 +150,7 @@ function isActive(userId) {
 function refreshUser(userId) {
 	var now = new Date().getTime();
 	if(typeof users[userId] != 'undefined') {
-		users[userId].expire = now + 60000;
+		users[userId].expire = now + 600000;
 		users[userId].active = true;
 	}
 }

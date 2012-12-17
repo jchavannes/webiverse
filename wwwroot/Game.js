@@ -134,7 +134,8 @@ var Game = new(function() {
 					player[i].position.z = ((playerCords[i].cords.z - playerCords[i].startCords.z) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.z;
 					//player[i].rotation.y = playerCords[i].cords.y;
 
-					var direction = (playerCords[i].cords.y % (2*Math.PI)) / (2*Math.PI) * 360 + 180;
+					var curY = ((playerCords[i].cords.y - playerCords[i].startCords.y) / playerCords[i].steps) * (playerCords[i].steps - playerCords[i].stepsLeft) + playerCords[i].startCords.y;
+					var direction = (curY % (2*Math.PI)) / (2*Math.PI) * 360 + 180;
 					playerCords[i].lefteye.position.x = player[i].position.x+Animate.vectorX(direction+20)*20;
 					playerCords[i].lefteye.position.z = player[i].position.z+Animate.vectorZ(direction+20)*20;
 					playerCords[i].righteye.position.x = player[i].position.x+Animate.vectorX(direction-20)*20;
@@ -160,6 +161,7 @@ var Game = new(function() {
 			return Math.cos(Math.PI * (direction/180));
 		}
 		this.addPlayer = function(cords) {
+			console.log(cords);
 			var geometry = new THREE.CylinderGeometry(10, 25, 75);
 			var material = new THREE.MeshLambertMaterial({color: 0x3333dd});
 			var id = player.length;
@@ -167,7 +169,7 @@ var Game = new(function() {
 			playerCords[id] = {
 				active: false,
 				cords: cords,
-				startCords: Animate.playerCords(id),
+				startCords: cords,
 				lefteye: addSphere(),
 				righteye: addSphere(),
 			};
@@ -195,7 +197,7 @@ var Game = new(function() {
 			if (typeof id == 'undefined') {
 				return {x:camera.position.x, z:camera.position.z, y:camera.rotation.y};
 			} else if (typeof player[id] != 'undefined') {
-				return {x:player[id].position.x, z:player[id].position.z};
+				return {x:player[id].position.x, z:player[id].position.z, y:playerCords[id].cords.y};
 			}
 		}
 		this.setCamera = function(cords) {
@@ -242,7 +244,7 @@ var Game = new(function() {
 			var id = players.length;
 			players[id] = {
 				socketId: socketId,
-				animateId: Animate.addPlayer({x:data.x, z:data.z})
+				animateId: Animate.addPlayer(data)
 			}
 		}
 		function getPlayer(socketId) {
@@ -269,6 +271,6 @@ var Game = new(function() {
 		init();
 	});
 	$(window).resize(function() {
-		window.location.reload();
+		window.location.href = window.location.href;
 	})
 });
