@@ -45,7 +45,7 @@ var Game = new(function() {
 	var Animate = new (function() {
 		
 		var camera, scene, renderer, cube = [], player = [], playerCords = [];
-		init();
+		$(document).ready(init);
 
 		function init() {
 			camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -179,9 +179,20 @@ var Game = new(function() {
 			return id;
 		}
 		this.removePlayer = function(id) {
-			//scene.remove(player[id]);
+			playerHide(id);
+		}
+		playerShow = function(id) {
+			player[id].visible = true;
+			playerCords[id].lefteye.visible = true;
+			playerCords[id].righteye.visible = true;
+		}
+		playerHide = function(id) {
+			player[id].visible = false;
+			playerCords[id].lefteye.visible = false;
+			playerCords[id].righteye.visible = false;
 		}
 		this.movePlayer = function(id, cords) {
+			if (!player[id].visible) playerShow(id);
 			$.extend(playerCords[id], {
 				active: true,
 				cords: cords,
@@ -268,7 +279,7 @@ var Game = new(function() {
 			params.id = user.id;
 			socket.emit('sendMove', params);
 		}
-		init();
+		$(document).ready(init);
 	});
 	$(window).resize(function() {
 		window.location.href = window.location.href;
