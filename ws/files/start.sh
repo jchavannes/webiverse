@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node /var/www/nodejs/thewebiverse.node.js
+exec node /var/www/nodejs/thewebiverse.node.js
