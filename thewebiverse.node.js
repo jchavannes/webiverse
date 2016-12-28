@@ -2,11 +2,15 @@
  * Date: 12/15/2012 */
 
 // Load dependencies and create data stores
-var io = require('socket.io').listen(8020);
+var port = 80;
+
+var io = require('socket.io').listen(port);
 var sockets = [];
 var users = [];	
 var chatData = [];
 var checkPointsTimeout;
+
+console.log("Starting server on port " + port + "...");
 
 // New connection
 io.sockets.on('connection', function (socket) {

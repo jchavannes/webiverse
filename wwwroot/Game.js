@@ -217,12 +217,12 @@ var Game = new(function() {
 			camera.rotation.y = cords.y;
 		}
 
-	})
+	});
 	var Socket = new (function() {
 		var user = {};
 		var players = [];
 		var init = function() {
-			socket = io.connect('ws://dev.socketgaming.com:8020');
+			socket = io.connect('ws://dev1:8234');
 			socket.on('getSocket', function(data) {
 				cords = Animate.playerCords();
 				socket.emit('setSession', {sessionId:SESSIONID, sockId:data.sockId, x:cords.x, z:cords.z, y:cords.y});
