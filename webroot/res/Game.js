@@ -246,7 +246,11 @@ new(function() {
 		var user = {};
 		var players = [];
 		var init = function() {
-            socket = io.connect('ws://dev1:8234');
+			var socketUrl = "ws://";
+			if (window.location.protocol == "https:") {
+				socketUrl = "wss://";
+			}
+            socket = io.connect(socketUrl);
 			socket.on('hello', function() {
 				cords = Animate.playerCords();
 				socket.emit('setSession', {sessionId:SESSIONID, x:cords.x, z:cords.z, y:cords.y});
