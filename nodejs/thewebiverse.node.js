@@ -5,11 +5,14 @@
 var express = require('express'),
     http = require('http'),
     app = express(),
-    server = http.createServer(app).listen(8020),
+	port = 80,
+    server = http.createServer(app).listen(port),
     io = require('socket.io').listen(server),
     sockets = [],
     users = [],
     chatData = [];
+
+console.log("Server started on port " + port + "...");
 
 // New connection
 io.sockets.on('connection', function (socket) {
