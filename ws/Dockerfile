@@ -1,16 +1,8 @@
-FROM phusion/baseimage:0.9.18
+# Production
+FROM node:20-alpine AS production
+COPY ws/files /var/www/ws
+CMD node /var/www/ws/thewebiverse.node.js
 
-MAINTAINER Jason Chavannes <jason.chavannes@gmail.com>
-
-LABEL version="0.1"
-
-RUN apt-get update
-RUN apt-get -y upgrade
-
-RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
-RUN sudo apt-get -y install nodejs
-
-ADD files/start.sh /start
-RUN chmod u+x /start
-
-CMD /start
+# Development
+FROM node:20-alpine AS development
+CMD node /var/www/ws/thewebiverse.node.js

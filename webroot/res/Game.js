@@ -1,4 +1,12 @@
-new(function() {
+let GameTries = 0;
+Game();
+function Game() {
+
+	if (typeof io === 'undefined') {
+		GameTries++;
+		setTimeout(Game, 100*GameTries);
+		return
+	}
 
 	var Controls = new (function() {
 		this.keyDown = {
@@ -246,11 +254,7 @@ new(function() {
 		var user = {};
 		var players = [];
 		var init = function() {
-			var socketUrl = "ws://";
-			if (window.location.protocol == "https:") {
-				socketUrl = "wss://";
-			}
-            socket = io.connect(socketUrl);
+			socket = io.connect(('https:' == document.location.protocol) ? 'wss://' : 'ws://:8234');
 			socket.on('hello', function() {
 				cords = Animate.playerCords();
 				socket.emit('setSession', {sessionId:SESSIONID, x:cords.x, z:cords.z, y:cords.y});
@@ -307,4 +311,4 @@ new(function() {
 		$(document).ready(init);
 	});
 	$(window).resize(function() {window.location.href = "";});
-});
+}

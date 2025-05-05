@@ -17,7 +17,13 @@
 	</style>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        const socketIOUrl = ('https:' == document.location.protocol) ? '' : 'http://' + document.location.hostname + ':8234/';
+        let script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = socketIOUrl + 'socket.io/socket.io.js';
+        document.head.appendChild(script);
+    </script>
 </head>
 <body>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/threejs/r83/three.min.js"></script>

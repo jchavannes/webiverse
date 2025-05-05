@@ -1,0 +1,42 @@
+services:
+  http-prod:
+    image: webiverse-http-prod
+    platform: linux/amd64
+    build:
+      dockerfile: http/Dockerfile
+      target: ${DOCKER_TARGET:-production}
+    profiles:
+      - prod
+  ws-prod:
+    image: webiverse-ws-prod
+    platform: linux/amd64
+    build:
+      dockerfile: ws/Dockerfile
+      target: ${DOCKER_TARGET:-production}
+    profiles:
+      - prod
+  http-dev:
+    image: webiverse-http-dev
+    container_name: webiverse-http-dev
+    ports:
+      - "8233:80"
+    volumes:
+      - ./webroot/:/var/www/html/
+    build:
+      dockerfile: http/Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    profiles:
+      - dev
+  ws-dev:
+    image: webiverse-ws-dev
+    container_name: webiverse-ws-dev
+    ports:
+      - "8234:80"
+    volumes:
+      - ./ws/files/:/var/www/ws/
+    working_dir: /var/www/ws
+    build:
+      dockerfile: ws/Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    profiles:
+      - dev
